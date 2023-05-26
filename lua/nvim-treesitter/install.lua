@@ -243,6 +243,7 @@ local function do_download_tar(logger, repo, project_name, cache_dir, revision, 
 
   logger:debug('Creating temporary directory: ' .. temp_dir)
   --TODO(clason): use vim.fn.mkdir(temp_dir, 'p') in case stdpath('cache') is not created
+  util.delete(temp_dir)
   local err = uv_mkdir(temp_dir, 493)
   a.main()
   if err then
@@ -525,6 +526,7 @@ local function install_lang(lang, cache_dir, install_dir, force, generate_from_g
   if err then
     logger:error(err)
   end
+
   logger:info('Parser installed')
 end
 
