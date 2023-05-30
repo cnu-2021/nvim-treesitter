@@ -3,10 +3,10 @@ name: Tests
 on:
   push:
     branches:
-      - "master"
+      - "main"
   pull_request:
     branches:
-      - "master"
+      - "main"
 
 # Cancel any in-progress CI runs for a PR if it is updated
 concurrency:
@@ -58,8 +58,7 @@ jobs:
 
       - name: Compile parsers Unix like
         if: ${{ matrix.os != 'windows-latest' && steps.parsers-cache.outputs.cache-hit != 'true' }}
-        run: |
-          nvim --headless -c "TSInstallSync all" -c "q"
+        run: nvim -l ./scripts/install-parsers.lua
 
       - name: Tests
         run: PATH=/usr/local/bin:$PATH ./scripts/run_tests.sh

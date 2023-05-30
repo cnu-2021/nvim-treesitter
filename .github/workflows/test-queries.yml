@@ -3,10 +3,10 @@ name: Test queries
 on:
   push:
     branches:
-      - "master"
+      - "main"
   pull_request:
     branches:
-      - "master"
+      - "main"
 
 # Cancel any in-progress CI runs for a PR if it is updated
 concurrency:
@@ -24,28 +24,28 @@ jobs:
       matrix:
         os: [ubuntu-latest, windows-2022, macos-latest]
         cc: [gcc, clang]
-        nvim_tag: [stable]
+        nvim_tag: [nightly]
         exclude:
           - os: ubuntu-latest
             cc: clang
-            nvim_tag: stable
+            nvim_tag: nightly
 
           - os: macos-latest
             cc: gcc
-            nvim_tag: stable
+            nvim_tag: nightly
 
           - os: windows-2022
             cc: clang
-            nvim_tag: stable
+            nvim_tag: nightly
 
         include:
           - os: windows-2022
             cc: cl
-            nvim_tag: stable
-
-          - os: ubuntu-latest
-            cc: gcc
             nvim_tag: nightly
+
+          # - os: ubuntu-latest
+          #   cc: gcc
+          #   nvim_tag: nightly
 
     name: Parser compilation
     runs-on: ${{ matrix.os }}
@@ -77,7 +77,7 @@ jobs:
           key: ${{ matrix.os }}-${{ matrix.cc }}-${{ matrix.nvim_tag }}-parsers-v1-${{ hashFiles('./lockfile.json', './lua/nvim-treesitter/parsers.lua', './lua/nvim-treesitter/install.lua', './lua/nvim-treesitter/shell_command_selectors.lua') }}
 
       - name: Compile parsers
-        run: $NVIM --headless -c "lua require'nvim-treesitter.install'.prefer_git=false" -c "TSInstallSync all" -c "q"
+        run: $NVIM -l ./scripts/install-parsers.lua
 
       - name: Post compile Windows
         if: matrix.os == 'windows-2022'
